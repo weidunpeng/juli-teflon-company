@@ -314,6 +314,125 @@
 </head>
 <body class="theme-gradient">
 
+<!-- 咨询按钮 -->
+<style>
+.consult-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 100;
+    background: linear-gradient(135deg, #ff6a00, #ee0979);
+    color: white;
+    border: none;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(238,9,121,0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    gap: 2px;
+    transition: all 0.3s;
+    animation: pulse-glow 2s infinite;
+}
+.consult-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 28px rgba(238,9,121,0.6);
+}
+.consult-btn svg { width: 22px; height: 22px; }
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 4px 20px rgba(238,9,121,0.4); }
+    50% { box-shadow: 0 4px 32px rgba(238,9,121,0.7); }
+}
+.consult-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+.consult-modal.show { display: flex; }
+.consult-modal-box {
+    background: white;
+    border-radius: 16px;
+    padding: 36px 32px 28px;
+    text-align: center;
+    max-width: 360px;
+    width: 90%;
+    position: relative;
+    animation: pop-in 0.3s ease;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+}
+@keyframes pop-in {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.consult-modal-box h3 {
+    font-size: 18px;
+    color: #1a3a6b;
+    margin-bottom: 6px;
+}
+.consult-modal-box p {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 16px;
+    text-indent: 0;
+}
+.consult-modal-box img {
+    width: 240px;
+    height: 240px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+}
+.consult-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 24px;
+    color: #aaa;
+    cursor: pointer;
+    line-height: 1;
+}
+.consult-modal-close:hover { color: #333; }
+@media (max-width: 480px) {
+    .consult-btn { width: 56px; height: 56px; bottom: 20px; right: 20px; }
+    .consult-btn svg { width: 18px; height: 18px; }
+}
+</style>
+
+<!-- 浮动咨询按钮 -->
+<button class="consult-btn" onclick="openConsult()" title="在线咨询">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    咨询
+</button>
+
+<!-- 咨询弹窗 -->
+<div class="consult-modal" id="consultModal" onclick="closeConsultOutside(event)">
+    <div class="consult-modal-box">
+        <span class="consult-modal-close" onclick="closeConsult()">&times;</span>
+        <h3>📞 在线咨询</h3>
+        <p>扫码添加，立即沟通</p>
+        <img src="images/boss-qr.jpg" alt="BOSS直聘二维码">
+        <p style="font-size:12px;color:#999;margin-bottom:0;">长按识别二维码 · 一键投递/咨询</p>
+    </div>
+</div>
+
+<script>
+function openConsult() { document.getElementById('consultModal').classList.add('show'); }
+function closeConsult() { document.getElementById('consultModal').classList.remove('show'); }
+function closeConsultOutside(e) { if (e.target === document.getElementById('consultModal')) closeConsult(); }
+</script>
+
 <!-- 主题切换器 -->
 <div class="theme-switcher">
     <button class="theme-btn active" data-theme="gradient" title="渐变背景" onclick="switchTheme('gradient')"></button>
