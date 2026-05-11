@@ -11,8 +11,78 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
             color: #333;
             line-height: 1.8;
-            background: #f5f5f5;
+            transition: background 0.5s ease;
         }
+
+        /* ===== 主题定义 ===== */
+        /* 主题1：纯色渐变 */
+        body.theme-gradient { background: linear-gradient(135deg, #e8edf5 0%, #d5ddee 50%, #e8edf5 100%); }
+
+        /* 主题2：产品图背景（取第一张产品图做半透明底纹） */
+        body.theme-product {
+            background: linear-gradient(rgba(255,255,255,0.92), rgba(255,255,255,0.92)),
+                        url('images/051c6ef0ea795ae09bcf628930a575f4.jpg') center/cover fixed;
+        }
+
+        /* 主题3：纹理背景（SVG 碳纤维/金属纹理） */
+        body.theme-texture {
+            background-color: #f0f2f5;
+            background-image: 
+                linear-gradient(45deg, #e6e9ef 12.5%, transparent 12.5%),
+                linear-gradient(-45deg, #e6e9ef 12.5%, transparent 12.5%);
+            background-size: 40px 40px;
+        }
+
+        /* 主题4：几何底纹 */
+        body.theme-geo {
+            background-color: #f5f7fa;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(43,94,167,0.04) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(43,94,167,0.04) 0%, transparent 50%),
+                linear-gradient(90deg, rgba(43,94,167,0.03) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(43,94,167,0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+        }
+
+        /* 主题切换器 */
+        .theme-switcher {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 100;
+            display: flex;
+            gap: 6px;
+            background: rgba(255,255,255,0.95);
+            padding: 8px 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            backdrop-filter: blur(8px);
+        }
+        .theme-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .theme-btn:hover { transform: scale(1.2); }
+        .theme-btn.active { border-color: #1a3a6b; box-shadow: 0 0 0 2px white, 0 0 0 4px #1a3a6b; }
+        .theme-btn[data-theme="gradient"] { background: linear-gradient(135deg, #e8edf5, #b0c0db); }
+        .theme-btn[data-theme="product"] {
+            background: url('images/051c6ef0ea795ae09bcf628930a575f4.jpg') center/cover;
+            background-size: cover;
+        }
+        .theme-btn[data-theme="texture"] {
+            background: #f0f2f5;
+            background-image: linear-gradient(45deg, #d0d5e0 12.5%, transparent 12.5%), linear-gradient(-45deg, #d0d5e0 12.5%, transparent 12.5%);
+            background-size: 14px 14px;
+        }
+        .theme-btn[data-theme="geo"] {
+            background: #f5f7fa;
+            background-image: radial-gradient(circle at 40% 40%, rgba(43,94,167,0.1) 0%, transparent 50%);
+        }
+
         .header {
             background: linear-gradient(135deg, #1a3a6b 0%, #2b5ea7 50%, #1a3a6b 100%);
             color: white;
@@ -36,11 +106,13 @@
         }
         .container { max-width: 960px; margin: 0 auto; padding: 20px; }
         .card {
-            background: white;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(10px);
             border-radius: 10px;
             padding: 32px;
             margin-bottom: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: background 0.3s;
         }
         .card h2 {
             font-size: 20px;
@@ -91,7 +163,7 @@
         }
         .contact-item {
             padding: 12px;
-            background: #f8f9fa;
+            background: rgba(248,249,250,0.8);
             border-radius: 8px;
         }
         .contact-item .label {
@@ -110,7 +182,7 @@
             margin-top: 12px;
         }
         .products span {
-            background: #eef2f7;
+            background: rgba(238,242,247,0.8);
             padding: 6px 12px;
             border-radius: 6px;
             text-align: center;
@@ -231,10 +303,24 @@
             .contact-grid { grid-template-columns: 1fr; }
             .products { grid-template-columns: 1fr 1fr; }
             .card { padding: 20px; }
+            .theme-switcher {
+                top: 8px;
+                right: 8px;
+                padding: 6px 10px;
+            }
+            .theme-btn { width: 24px; height: 24px; }
         }
     </style>
 </head>
-<body>
+<body class="theme-gradient">
+
+<!-- 主题切换器 -->
+<div class="theme-switcher">
+    <button class="theme-btn active" data-theme="gradient" title="渐变背景" onclick="switchTheme('gradient')"></button>
+    <button class="theme-btn" data-theme="product" title="产品图背景" onclick="switchTheme('product')"></button>
+    <button class="theme-btn" data-theme="texture" title="纹理背景" onclick="switchTheme('texture')"></button>
+    <button class="theme-btn" data-theme="geo" title="几何底纹" onclick="switchTheme('geo')"></button>
+</div>
 
 <div class="header">
     <h1>聚力铁氟龙智能科技（佛山）有限公司</h1>
@@ -347,7 +433,6 @@
                     <a href="https://apis.map.qq.com/uri/v1/search?keyword=聚力铁氟龙智能科技（佛山）有限公司&referer=myapp" target="_blank" style="background:#07c160;color:white;padding:6px 14px;border-radius:5px;text-decoration:none;font-size:13px;">🗺️ 腾讯地图导航</a>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -375,7 +460,7 @@
 </div>
 
 <script>
-// 图片文件名列表（从images目录自动获取）
+// 图片文件名列表
 const images = [
     "051c6ef0ea795ae09bcf628930a575f4.jpg",
     "09e581880fe47cde40230f0f48576aef.jpg",
@@ -452,6 +537,20 @@ function prevPage() { if (currentPage > 1) { currentPage--; renderGallery(); } }
 function nextPage() { if (currentPage < totalPages) { currentPage++; renderGallery(); } }
 function openModal(src) { document.getElementById('modalImg').src = src; document.getElementById('imgModal').style.display = 'flex'; }
 function closeModal() { document.getElementById('imgModal').style.display = 'none'; }
+
+// 主题切换
+function switchTheme(name) {
+    document.body.className = 'theme-' + name;
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.theme-btn[data-theme="${name}"]`).classList.add('active');
+    localStorage.setItem('juli-theme', name);
+}
+
+// 恢复上次主题
+(function() {
+    const saved = localStorage.getItem('juli-theme');
+    if (saved) switchTheme(saved);
+})();
 
 renderGallery();
 </script>
