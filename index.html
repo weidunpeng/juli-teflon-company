@@ -428,6 +428,10 @@
 </div>
 
 <script>
+// 页面刷新后强制回到顶部（防止浏览器滚动恢复）
+window.addEventListener('beforeunload', function() { window.scrollTo(0,0); });
+window.scrollTo(0,0);
+
 function openConsult() { document.getElementById('consultModal').classList.add('show'); }
 function closeConsult() { document.getElementById('consultModal').classList.remove('show'); }
 function closeConsultOutside(e) { if (e.target === document.getElementById('consultModal')) closeConsult(); }
