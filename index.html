@@ -117,6 +117,70 @@
             font-size: 14px;
             color: #1a3a6b;
         }
+        .product-gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .product-gallery img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .product-gallery img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        .gallery-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .gallery-nav button {
+            background: #2b5ea7;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .gallery-nav button:hover { background: #1a3a6b; }
+        .gallery-nav button:disabled { background: #ccc; cursor: default; }
+        .gallery-nav #pageInfo { font-size: 14px; color: #666; }
+
+        /* 图片放大弹窗 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+        }
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .product-gallery { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .product-gallery { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        }
+
         .footer {
             text-align: center;
             padding: 24px;
@@ -194,6 +258,18 @@
         </div>
     </div>
 
+    <!-- 产品展示 -->
+    <div class="card">
+        <h2>产品展示</h2>
+        <p>公司部分铁氟龙喷涂产品展示：</p>
+        <div class="product-gallery" id="productGallery"></div>
+        <div class="gallery-nav" id="galleryNav">
+            <button onclick="prevPage()" id="prevBtn">上一页</button>
+            <span id="pageInfo">1 / 5</span>
+            <button onclick="nextPage()" id="nextBtn">下一页</button>
+        </div>
+    </div>
+
     <!-- 合作案例 -->
     <div class="card">
         <h2>合作案例</h2>
@@ -242,6 +318,93 @@
 <div class="footer">
     &copy; 2026 聚力铁氟龙智能科技（佛山）有限公司 &nbsp;·&nbsp; All Rights Reserved
 </div>
+
+<!-- 图片放大弹窗 -->
+<div class="modal" id="imgModal" onclick="closeModal()">
+    <img id="modalImg" src="" alt="产品展示大图">
+</div>
+
+<script>
+// 图片文件名列表（从images目录自动获取）
+const images = [
+    "051c6ef0ea795ae09bcf628930a575f4.jpg",
+    "09e581880fe47cde40230f0f48576aef.jpg",
+    "0f63a4cfd0c3a9e15e2c511b4626a18f.jpg",
+    "103b7b2207fbb3db90eb580d0fe89c6d.jpg",
+    "12d6ba27569b8191938738c97d114f3a.jpg",
+    "13806b21b6c3f2ebbfdbc68f3cad37e2.jpg",
+    "138d6875214c7caba9a48368d6f3f461.jpg",
+    "1502ef43f3070fa101a2b1bb32677f7b.jpg",
+    "1c81a04196b080dd694fbf139c7f5fb3.jpg",
+    "22189041f89a2802be3a4fad791c4e6b.jpg",
+    "26e0a33e15d9414e8837ba906fed9e95.jpg",
+    "30973414b129dd6211a12c7ff86fa25b.jpg",
+    "47be8941ef1f38b783950f5ac31753b8.jpg",
+    "48dc07f8fd075528d89b47627aafa964.jpg",
+    "4b446501310c517cd8ed316d8b8905cf.jpg",
+    "4c2b9e415fe1f895fa61321221a5b656.jpg",
+    "644758a6310311f6dbc0eb431f1df6ec.jpg",
+    "652ba75171725d5e14922bbfe8b9e40b.jpg",
+    "674652043b47d2ad342e66b7ccb16044.jpg",
+    "6a7d6a441c92774187ed792e9aec559e.jpg",
+    "6c5fbeaf6cd83934687248664c8d8000.jpg",
+    "718d3a2ef7d94b62a09e6918bf03949d.jpg",
+    "7380a95e3c185e50b50b856a4dbf0a65.jpg",
+    "750d228fec40f5bcdd2f6a15c34dcebc.jpg",
+    "77b1af78879103a255c5e9ed5495efae.jpg",
+    "793563b3f27bc28e4d923b761cf8b1fa.jpg",
+    "7960c169997079e0c57e586f952ffb14.jpg",
+    "7a1f4969da91d44f468ad694fef85597.jpg",
+    "7b7b9fe9b42f1978616e15ab42dc3662.jpg",
+    "7bec71b13af44fd14bdd31df3d7f53b6.jpg",
+    "7d873854b3121db2ed3c6e11b15f5e16.jpg",
+    "876593af246380674a5299aff2e1b028.jpg",
+    "9174bb1d33fb60802359d4e3057dda7e.jpg",
+    "9a6e552fb049e4cf08cd1d9993e274cd.jpg",
+    "a23fcf3788c078a2c6ee461abec2bff5.jpg",
+    "a88fde6527bc453c82a870bac08ccf3f.jpg",
+    "b14f5f8adff96fc3a03c6b90fc5482f1.jpg",
+    "b8d24521156311627601809e75a3f0bf.jpg",
+    "c453ca6c598658016cc82844124fb636.jpg",
+    "c6b4e5133e699bcd09e3f0a7356afa3a.jpg",
+    "cb541ccf4111f34827acc51d2bbf8fee.jpg",
+    "d62c2d7298472057ede8617ad62a422e.jpg",
+    "d985b928271042f5a19984b4843770bb.jpg",
+    "d9d2e86727505005eb8063c657735e9c.jpg",
+    "e1b8dd0a7f5202dc13572a9e080f0c28.jpg",
+    "e59255b083d04ab3d0d74f7246052146.jpg",
+    "e84c9bf7a2e63d90b4009886884c1556.jpg",
+    "ea3ac1b5dc3093841684f542f716c4ba.jpg",
+    "f2e7ba2525dce67c9b7014820ccc0e65.jpg",
+    "fca017ab0e7ec0962e08e3497a5e3c52.jpg"
+];
+
+const perPage = 12;
+let currentPage = 1;
+const totalPages = Math.ceil(images.length / perPage);
+
+function renderGallery() {
+    const gallery = document.getElementById('productGallery');
+    const start = (currentPage - 1) * perPage;
+    const end = Math.min(start + perPage, images.length);
+    const pageImages = images.slice(start, end);
+
+    gallery.innerHTML = pageImages.map(img => 
+        `<img src="images/${img}" alt="产品展示" loading="lazy" onclick="openModal('images/${img}')">`
+    ).join('');
+
+    document.getElementById('pageInfo').textContent = `${currentPage} / ${totalPages}`;
+    document.getElementById('prevBtn').disabled = currentPage === 1;
+    document.getElementById('nextBtn').disabled = currentPage === totalPages;
+}
+
+function prevPage() { if (currentPage > 1) { currentPage--; renderGallery(); } }
+function nextPage() { if (currentPage < totalPages) { currentPage++; renderGallery(); } }
+function openModal(src) { document.getElementById('modalImg').src = src; document.getElementById('imgModal').style.display = 'flex'; }
+function closeModal() { document.getElementById('imgModal').style.display = 'none'; }
+
+renderGallery();
+</script>
 
 </body>
 </html>
