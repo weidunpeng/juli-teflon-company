@@ -174,6 +174,45 @@
             border-radius: 8px;
         }
 
+        /* 地图样式 */
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            overflow: hidden;
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .map-overlay {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .map-overlay a {
+            background: white;
+            color: #1a3a6b;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.15s;
+        }
+        .map-overlay a:hover {
+            transform: scale(1.05);
+        }
+
         @media (max-width: 640px) {
             .product-gallery { grid-template-columns: repeat(2, 1fr); }
         }
@@ -302,15 +341,26 @@
             </div>
             <div class="contact-item" style="grid-column: 1 / -1;">
                 <div class="label">导航定位</div>
-                <div class="value"><a href="https://uri.amap.com/marker?position=113.090000,22.850000&name=聚力铁氟龙智能科技（佛山）有限公司" target="_blank" style="color:#2b5ea7;text-decoration:none;">高德地图导航 →</a>　<a href="https://ditu.baidu.com/poi/聚力铁氟龙智能科技（佛山）有限公司" target="_blank" style="color:#2b5ea7;text-decoration:none;">百度地图导航 →</a></div>
+                <div class="value" style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <a href="https://uri.amap.com/marker?position=113.071490,22.835850&name=聚力铁氟龙智能科技（佛山）有限公司&src=web" target="_blank" style="background:#2b5ea7;color:white;padding:6px 14px;border-radius:5px;text-decoration:none;font-size:13px;">🗺️ 高德地图导航</a>
+                    <a href="https://api.map.baidu.com/place/detail?uid=&output=html&src=web&q=聚力铁氟龙智能科技（佛山）有限公司&center=113.071490,22.835850&zoom=16" target="_blank" style="background:#2932e1;color:white;padding:6px 14px;border-radius:5px;text-decoration:none;font-size:13px;">🗺️ 百度地图导航</a>
+                    <a href="https://apis.map.qq.com/uri/v1/marker?marker=coord:22.835850,113.071490;title:聚力铁氟龙智能科技（佛山）有限公司&referer=myapp" target="_blank" style="background:#07c160;color:white;padding:6px 14px;border-radius:5px;text-decoration:none;font-size:13px;">🗺️ 腾讯地图导航</a>
+                </div>
             </div>
 
         </div>
     </div>
 
-    <!-- 地图 -->
+    <!-- 地图定位 -->
     <div class="card" style="padding:0;overflow:hidden;border-radius:10px;">
-        <iframe src="https://ditu.baidu.com/poi/聚力铁氟龙智能科技（佛山）有限公司" width="100%" height="300" frameborder="0" style="border:0;" allowfullscreen loading="lazy"></iframe>
+        <div class="map-container">
+            <iframe src="https://uri.amap.com/marker?position=113.071490,22.835850&name=聚力铁氟龙智能科技（佛山）有限公司&src=web&coordinate=gaode" allowfullscreen loading="lazy"></iframe>
+            <div class="map-overlay">
+                <a href="https://uri.amap.com/marker?position=113.071490,22.835850&name=聚力铁氟龙智能科技（佛山）有限公司&src=web" target="_blank">📍 高德导航</a>
+                <a href="https://api.map.baidu.com/place/detail?uid=&output=html&src=web&q=聚力铁氟龙智能科技（佛山）有限公司&center=113.071490,22.835850&zoom=16" target="_blank">📍 百度导航</a>
+                <a href="https://apis.map.qq.com/uri/v1/marker?marker=coord:22.835850,113.071490;title:聚力铁氟龙智能科技（佛山）有限公司&referer=myapp" target="_blank">📍 腾讯导航</a>
+            </div>
+        </div>
     </div>
 
 </div>
